@@ -162,7 +162,10 @@ body { padding:14px 14px 30px; }
         <div class="chips" id="chips"></div>
         <div class="topline">
           <div class="stats" id="counter">0 ricette</div>
-          <button class="small-btn" id="scrollTopBtn">Torna su</button>
+          <div style="display:flex; gap:8px;">
+            <button class="small-btn" id="scrollTopBtn">Torna su</button>
+            <button class="small-btn" id="logoutBtn">Esci</button>
+          </div>
         </div>
       </div>
     </div>
@@ -200,6 +203,7 @@ body { padding:14px 14px 30px; }
 
 <script>
 const ACCESS_CODE = "Loco0106R";
+if(localStorage.getItem("locoselli_access") === "ok"){ window.addEventListener("load", () => enterApp()); }
 let files = [];
 let activeCategory = "Tutte";
 const categories = ["Tutte","Bassa temperatura","Dolci","Lievitati","Molecolare","Salato","Tecniche","Basi"];
@@ -216,6 +220,7 @@ const counter = document.getElementById("counter");
 const chips = document.getElementById("chips");
 const input = document.getElementById("searchInput");
 const scrollTopBtn = document.getElementById("scrollTopBtn");
+const logoutBtn = document.getElementById("logoutBtn");
 const featuredGrid = document.getElementById("featuredGrid");
 const catGrid = document.getElementById("catGrid");
 
@@ -299,6 +304,10 @@ function render() {
 scrollTopBtn.addEventListener("click", function() {
   window.scrollTo({top:0, behavior:"smooth"});
 });
+logoutBtn.addEventListener("click", function() {
+  localStorage.removeItem("locoselli_access");
+  location.reload();
+});
 
 async function loadFiles() {
   const [repoRes, searchRes] = await Promise.all([
@@ -342,6 +351,7 @@ function enterApp() {
 function checkCode() {
   if(codeInput.value === ACCESS_CODE) {
     errorMsg.textContent = "";
+    localStorage.setItem("locoselli_access", "ok");
     enterApp();
   } else {
     errorMsg.textContent = "Codice errato. Riprova.";
