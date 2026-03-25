@@ -203,7 +203,7 @@ body { padding:14px 14px 30px; }
 
 <script>
 const ACCESS_CODE = "Loco0106R";
-if(localStorage.getItem("locoselli_access") === "ok"){ window.addEventListener("load", () => enterApp()); }
+if(localStorage.getItem("locoselli_access") === "ok"){ window.addEventListener("load", function(){ enterApp(); }); }
 let files = [];
 let activeCategory = "Tutte";
 const categories = ["Tutte","Bassa temperatura","Dolci","Lievitati","Molecolare","Salato","Tecniche","Basi"];
@@ -273,7 +273,7 @@ function renderChips() {
 }
 
 function escapeRegExp(string) {
-  return string.replace(/[.*+?^${}()|[\]\]/g, "\$&");
+  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 function highlightText(text, query) {
