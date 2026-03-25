@@ -1,0 +1,80 @@
+    <!DOCTYPE html>
+    <html lang="it">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+      <base href="/app-ricette-Loco/">
+      <title>ricetta macaron • Locoselli</title>
+      <meta name="theme-color" content="#0b0b0d">
+      <link rel="apple-touch-icon" href="logo-apple.png">
+      <style>
+        :root {
+          --bg:#0b0b0d; --card:#151518; --card2:#1b1b21; --text:#f5f5f7; --muted:#b2b2ba;
+          --gold:#d8aa2b; --gold2:#f0d178; --line:rgba(255,255,255,.08); --shadow:0 16px 40px rgba(0,0,0,.35);
+        }
+        * { box-sizing:border-box; }
+        html,body {
+          margin:0; padding:0;
+          background:
+            radial-gradient(circle at top left, rgba(216,170,43,.10), transparent 22%),
+            linear-gradient(180deg,#09090b 0%,#0d0d11 100%);
+          color:var(--text);
+          font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+        }
+        .wrap { max-width:940px; margin:0 auto; padding:18px 14px 38px; }
+        .top { display:flex; align-items:center; gap:14px; margin-bottom:16px; }
+        .logo {
+          width:58px; height:58px; border-radius:16px; object-fit:cover;
+          background:#111; border:1px solid var(--line);
+        }
+        h1 { margin:0; color:var(--gold); font-size:31px; line-height:1.04; letter-spacing:-.04em; }
+        .meta { color:var(--muted); font-size:14px; margin-top:4px; }
+        .nav { position:sticky; top:10px; z-index:20; display:flex; gap:10px; flex-wrap:wrap; margin:12px 0 18px; }
+        .nav a {
+          text-decoration:none; color:#15120a;
+          background:linear-gradient(180deg,var(--gold2),var(--gold));
+          padding:11px 14px; border-radius:13px; font-weight:800;
+          box-shadow:var(--shadow);
+        }
+        .card {
+          background:linear-gradient(180deg,var(--card),var(--card2));
+          border:1px solid var(--line); border-radius:24px; padding:20px;
+          box-shadow:var(--shadow); position:relative;
+        }
+        .card:before {
+          content:""; position:absolute; inset:0 0 auto 0; height:1px;
+          background:linear-gradient(90deg,transparent,rgba(240,209,120,.32),transparent);
+        }
+        h2,h3 { color:var(--gold2); }
+        p,li { line-height:1.6; font-size:16px; }
+        ul { padding-left:20px; }
+        .watermark { position:fixed; inset:auto 12px 10px auto; font-size:11px; color:rgba(255,255,255,.28); }
+      </style>
+    </head>
+    <body>
+      <div class="wrap">
+        <div class="top">
+          <img src="logo.PNG" class="logo" alt="Locoselli">
+          <div>
+            <h1>ricetta macaron</h1>
+            <div class="meta">Categoria: Dolci • Metodo Locoselli • uso riservato</div>
+          </div>
+        </div>
+        <div class="nav">
+          <a href="index.html">← Torna al ricettario</a>
+        </div>
+        <div class="card">
+          <p>Macaron Veloci con Albumi in Polvere</p>
+<p>Questa ricetta permette di preparare macaron in modo più rapido utilizzando albumi in polvere e un</p>
+<p>forno ventilato.</p>
+<h3>Ingredienti</h3>
+<ul><li>10 g di albumi in polvere</li><li>60 g di acqua tiepida</li><li>100 g di farina di mandorle</li><li>100 g di zucchero a velo</li><li>Pizzico di cremor tartaro o qualche goccia di succo di limone</li></ul>
+<h3>Procedimento</h3>
+<ul><li>Reidratare gli albumi in polvere con l’acqua tiepida e lasciare riposare per qualche minuto.</li><li>Montare gli albumi reidratati a neve ferma con cremor tartaro o succo di limone.</li><li>Setacciare farina di mandorle e zucchero a velo e incorporare delicatamente alla meringa.</li><li>Trasferire l’impasto in una sac à poche e formare dei dischetti su una teglia rivestita di carta da</li></ul>
+<p>forno.</p>
+<ul><li>Lasciare riposare i gusci 20 minuti per formare la crosticina.</li><li>Cuocere in forno ventilato a 140–150°C per 12–14 minuti.</li><li>Far raffreddare e farcire a piacere.</li></ul>
+        </div>
+      </div>
+      <div class="watermark">Locoselli • Premium</div>
+    </body>
+    </html>
