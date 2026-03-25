@@ -141,7 +141,7 @@ body { padding:14px 14px 30px; }
       </div>
       <button class="enter-btn" id="enterBtn">Entra</button>
       <div class="error" id="errorMsg"></div>
-      <div class="hint">Premium • ricerca nel testo • tutto completo</div>
+      <div class="hint">Premium • ricerca reale dentro tutte le ricette</div>
     </div>
   </section>
 
@@ -152,7 +152,7 @@ body { padding:14px 14px 30px; }
           <img src="logo.PNG" class="logo" alt="Locoselli">
           <div>
             <h2 class="brand-title">Locoselli</h2>
-            <div class="sub">Ricettario Premium • HTML interno • ricerca vera</div>
+            <div class="sub">Ricettario Premium • ricerca nel contenuto reale</div>
           </div>
         </div>
         <div class="searchbox">
@@ -223,6 +223,18 @@ const scrollTopBtn = document.getElementById("scrollTopBtn");
 const logoutBtn = document.getElementById("logoutBtn");
 const featuredGrid = document.getElementById("featuredGrid");
 const catGrid = document.getElementById("catGrid");
+
+
+function detectCategory(name) {
+  const n = name.toLowerCase();
+  if (/(bassa-temperatura|bassa temperatura|cottura|sous)/.test(n)) return "Bassa temperatura";
+  if (/(panettone|pandoro|brioches|baba|lievito|lievit)/.test(n)) return "Lievitati";
+  if (/(tiramisu|tortini|dessert|panna|macaron|bigne|frolla|plumcake|cartellate|zabaglione|mignon|biscuit)/.test(n)) return "Dolci";
+  if (/(agar|sferificazione|molecolare|glice|isomalto|inulina|konjac|carragen|sucro|maltodestrina|pectina|texture|spume|mousse|gelburger|destrosio|trealosio|neutral|flexifiber|mono-diglicer|mono diglicer)/.test(n)) return "Molecolare";
+  if (/(risotti|ravioli|salse|salata|sfoglia|bistecche|vegetali|peperone)/.test(n)) return "Salato";
+  if (/(corso|lezione|prodotti|damiano|tecniche)/.test(n)) return "Tecniche";
+  return "Basi";
+}
 
 function renderFeatured() {
   const featured = [];
@@ -324,31 +336,52 @@ logoutBtn.addEventListener("click", function() {
 });
 
 async function loadFiles() {
-  const [repoRes, searchRes] = await Promise.all([
-    fetch("https://api.github.com/repos/chefantonioloco87/app-ricette-Loco/contents"),
-    fetch("search_index.json").catch(() => null)
-  ]);
+  const repoRes = await fetch("https://api.github.com/repos/chefantonioloco87/app-ricette-Loco/contents");
   const repoData = await repoRes.json();
-  let searchIndex = [];
-  if(searchRes && searchRes.ok) searchIndex = await searchRes.json();
 
-  files = repoData
+  const pages = repoData
     .filter(f => f.name.endsWith(".html") && f.name !== "index.html" && f.name !== "test.html")
-    .map(f => {
-      const hit = searchIndex.find(x => x.file === f.name) || {};
-      const title = hit.title || f.name.replace(/\.html$/i,"").replace(/-/g," ");
-      const category = hit.category || "Basi";
-      const text = (hit.text || "").toLowerCase();
+    .sort((a,b) => a.name.localeCompare(b.name, "it"));
+
+  files = await Promise.all(
+    pages.map(async (f) => {
+      let rawText = "";
+      try {
+        const res = await fetch(f.name);
+        const pageHtml = await res.text();
+        rawText = pageHtml
+          .replace(/<script[\s\S]*?<\/script>/gi, " ")
+          .replace(/<style[\s\S]*?<\/style>/gi, " ")
+          .replace(/<[^>]+>/g, " ")
+          .replace(/&nbsp;/g, " ")
+          .replace(/&amp;/g, "&")
+          .replace(/&quot;/g, '"')
+          .replace(/&#39;/g, "'")
+          .replace(/\s+/g, " ")
+          .trim()
+          .toLowerCase();
+      } catch (e) {
+        rawText = "";
+      }
+
+      const cleanTitle = f.name
+        .replace(/\.html$/i,"")
+        .replace(/-/g," ")
+        .replace(/\bcoretto\b/i,"corretto")
+        .trim();
+
+      const category = detectCategory(f.name);
+
       return {
         file: f.name,
-        title: title,
+        title: cleanTitle,
         category: category,
-        excerpt: hit.excerpt || "",
-        text: text,
-        keywords: (title + " " + category).toLowerCase()
+        excerpt: rawText ? rawText.slice(0, 260) : "",
+        text: rawText,
+        keywords: (cleanTitle + " " + category).toLowerCase()
       };
     })
-    .sort((a,b) => a.title.localeCompare(b.title, "it"));
+  );
 
   renderFeatured();
   renderCategories();
