@@ -272,7 +272,21 @@ function renderChips() {
   });
 }
 
+function escapeRegExp(string) {
+  return string.replace(/[.*+?^${}()|[\]\]/g, "\$&");
+}
+
+function highlightText(text, query) {
+  if (!query || !text) return text || "";
+  const regex = new RegExp("(" + escapeRegExp(query) + ")", "gi");
+  return text.replace(regex, "<span style='color:#d7aa2b;font-weight:800;'>$1</span>");
+}
+
 function card(item) {
+  let excerpt = item.excerpt || "";
+  const query = input.value.trim();
+  excerpt = highlightText(excerpt, query);
+
   return `
     <article class="card">
       <h3 class="title">${item.title}</h3>
@@ -280,10 +294,10 @@ function card(item) {
         <span class="badge">${item.category}</span>
         <span class="badge">HTML</span>
       </div>
-      <div class="excerpt">${item.excerpt || ""}</div>
+      <div class="excerpt">${excerpt}</div>
       <div class="actions">
         <a class="btn primary" href="${item.file}">Apri</a>
-        <a class="btn secondary" href="#" onclick="setCategory('${item.category.replace(/'/g,"\\'")}'); return false;">Categoria</a>
+        <a class="btn secondary" href="#" onclick="setCategory('${item.category.replace(/'/g,"\'")}'); return false;">Categoria</a>
       </div>
     </article>
   `;
@@ -293,7 +307,7 @@ function render() {
   const q = input.value.trim().toLowerCase();
   const filtered = files.filter(item => {
     const catOk = activeCategory === "Tutte" || item.category === activeCategory;
-    const searchOk = !q || item.keywords.includes(q) || (item.text && item.text.includes(q));
+    const searchOk = !q || item.keywords.includes(q) || (item.text && item.text.toLowerCase().includes(q));
     return catOk && searchOk;
   });
   grid.innerHTML = filtered.map(card).join("");
